@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "AI Doubt",
+  "version": "0.1",
+  "author": "Harsh Bhardwaj",
+  "description": "AI-powered coding assistant for problem solving",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "tabs"
+  ],
+  "host_permissions": [
+    "*://*.maang.in/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://*.maang.in/*"],
+      "js": ["content.js"],
+      "css": ["style.css"]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "AI Doubt"
+  }
+}

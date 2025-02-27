@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Doubt Solve</title>
+  <style>
+    body {
+      width: 320px;
+      padding: 20px;
+      font-family: "DM Sans", sans-serif;
+      background-color: #f8f9fa;
+    }
+    .api-input-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      transition: all 0.2s ease;
+    }
+    .api-input-container:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .api-input {
+      flex: 1;
+      padding: 10px;
+      border: 1.5px solid #e1e5ee;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+    .api-input:focus {
+      outline: none;
+      border-color: #608AD2;
+      box-shadow: 0 0 0 3px rgba(96,138,210,0.1);
+    }
+    .icon-button {
+      background: #f0f4ff;
+      border: none;
+      color: #608AD2;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+    .icon-button:hover {
+      background: #e0e8ff;
+      transform: scale(1.05);
+    }
+    .status {
+      font-size: 14px;
+      margin-top: 12px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+    .error {
+      color: #ff4d4f;
+      background: #fff2f0;
+      border: 1px solid #ffccc7;
+    }
+    .success {
+      color: #52c41a;
+      background: #f6ffed;
+      border: 1px solid #b7eb8f;
+    }
+  </style>
+</head>
+<body>
+  <div class="api-input-container">
+    <input type="password" id="apiKey" class="api-input" placeholder="Enter Gemini API Key" disabled>
+    <button id="editButton" class="icon-button">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+      </svg>
+    </button>
+  </div>
+  <div id="status" class="status"></div>
+  <script src="popup.js"></script>
+</body>
+</html> 
