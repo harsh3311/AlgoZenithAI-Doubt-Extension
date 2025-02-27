@@ -75,6 +75,19 @@ class AIChat {
   preparePrompt(message, type) {
     const { problemTitle, problemDescription, selectedLanguage } = this.problemContext;
     
+    // Add programming-focused validation
+    if (type === 'user' && !this.isProgrammingRelated(message)) {
+      return `I am designed to help specifically with programming questions and coding problems. I cannot provide assistance with ${message}. 
+
+Please ask me questions about:
+- The current coding problem
+- Programming concepts
+- Code debugging
+- Algorithm assistance
+- Data structures
+- Programming best practices`;
+    }
+
     let prompt = '';
     if (type === 'hint') {
       prompt = `Give me a clear hint for solving this coding problem, without giving away the complete solution.
@@ -189,6 +202,8 @@ Provide a direct, practical answer with code examples if relevant.`;
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
     
     this.messages.push({ message, type, timestamp: new Date().toISOString() });
+    
+    return messageDiv;
   }
 
   escapeHtml(text) {
@@ -216,6 +231,22 @@ Provide a direct, practical answer with code examples if relevant.`;
         resolve(result.geminiApiKey);
       });
     });
+  }
+
+  // Add new helper method
+  isProgrammingRelated(message) {
+    const programmingKeywords = [
+      'code', 'program', 'function', 'algorithm', 'debug', 'error',
+      'variable', 'array', 'object', 'class', 'method', 'loop',
+      'syntax', 'compile', 'runtime', 'api', 'database', 'framework',
+      'library', 'bug', 'exception', 'interface', 'implementation',
+      'optimization', 'complexity', 'data structure'
+    ];
+
+    message = message.toLowerCase();
+    return programmingKeywords.some(keyword => message.includes(keyword)) ||
+           message.includes('how to') || message.includes('why does') ||
+           message.includes('what is') || message.includes('explain');
   }
 }
 
