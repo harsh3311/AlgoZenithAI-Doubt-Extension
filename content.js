@@ -26,6 +26,7 @@ class AIChat {
     this.lastMessageTime = 0;
     this.minMessageInterval = 1000; // 1 second between messages
     this.isProcessing = false;
+    this.historyLoaded = false;
   }
 
   async sendMessage(message, type = 'user') {
@@ -61,8 +62,8 @@ class AIChat {
       // Add AI response to chat
       this.addMessage(response, 'ai');
       
-      // Save chat history
-      this.saveHistory();
+      // Save chat history immediately after adding each message
+      await this.saveHistory();
     } catch (error) {
       console.error('AI Chat Error:', error);
       this.addMessage('Sorry, there was an error processing your request.', 'error');
@@ -155,9 +156,17 @@ Provide a direct, practical answer with code examples if relevant.`;
     return data.candidates[0].content.parts[0].text;
   }
 
-  addMessage(message, type) {
+  addMessage(message, type, timestamp = new Date()) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `chat-message ${type}-message`;
+    
+    // Add timestamp display
+    const timeDisplay = document.createElement('div');
+    timeDisplay.className = 'message-timestamp';
+    timeDisplay.textContent = this.formatTimestamp(timestamp);
+    
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'message-content';
     
     // Handle code blocks for AI responses
     if (type === 'ai') {
@@ -179,10 +188,10 @@ Provide a direct, practical answer with code examples if relevant.`;
         `;
         formattedMessage = formattedMessage.replace(match[0], codeBlock);
       }
-      messageDiv.innerHTML = formattedMessage;
+      contentDiv.innerHTML = formattedMessage;
       
       // Add copy functionality to all copy buttons
-      messageDiv.querySelectorAll('.copy-button').forEach(button => {
+      contentDiv.querySelectorAll('.copy-button').forEach(button => {
         button.addEventListener('click', () => {
           const codeBlock = button.closest('.code-block');
           const code = codeBlock.querySelector('code').textContent;
@@ -194,14 +203,17 @@ Provide a direct, practical answer with code examples if relevant.`;
         });
       });
     } else {
-      messageDiv.textContent = message;
+      contentDiv.textContent = message;
     }
+    
+    messageDiv.appendChild(contentDiv);
+    messageDiv.appendChild(timeDisplay);
     
     const messagesContainer = document.querySelector('.chat-messages');
     messagesContainer.appendChild(messageDiv);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
     
-    this.messages.push({ message, type, timestamp: new Date().toISOString() });
+    this.messages.push({ message, type, timestamp: timestamp.toISOString() });
     
     return messageDiv;
   }
@@ -212,16 +224,20 @@ Provide a direct, practical answer with code examples if relevant.`;
     return div.innerHTML;
   }
 
-  saveHistory() {
+  async saveHistory() {
     const history = {
       problemTitle: this.problemContext.problemTitle,
       messages: this.messages
     };
     
-    chrome.storage.local.get(['chatHistory'], (result) => {
-      const chatHistory = result.chatHistory || [];
-      chatHistory.push(history);
-      chrome.storage.local.set({ chatHistory });
+    return new Promise((resolve) => {
+      chrome.storage.local.get(['chatHistory'], (result) => {
+        let chatHistory = result.chatHistory || [];
+        // Remove existing history for this problem if it exists
+        chatHistory = chatHistory.filter(h => h.problemTitle !== history.problemTitle);
+        chatHistory.push(history);
+        chrome.storage.local.set({ chatHistory }, resolve);
+      });
     });
   }
 
@@ -247,6 +263,59 @@ Provide a direct, practical answer with code examples if relevant.`;
     return programmingKeywords.some(keyword => message.includes(keyword)) ||
            message.includes('how to') || message.includes('why does') ||
            message.includes('what is') || message.includes('explain');
+  }
+
+  // Update loadHistory method
+  async loadHistory() {
+    if (!this.problemContext.problemTitle || this.historyLoaded) {
+      return;
+    }
+
+    try {
+      const result = await new Promise(resolve => {
+        chrome.storage.local.get(['chatHistory'], resolve);
+      });
+      
+      const chatHistory = result.chatHistory || [];
+      const problemHistory = chatHistory.find(h => h.problemTitle === this.problemContext.problemTitle);
+      
+      if (problemHistory && problemHistory.messages) {
+        // Clear existing messages first
+        const messagesContainer = document.querySelector('.chat-messages');
+        if (messagesContainer) {
+          messagesContainer.innerHTML = '';
+        }
+
+        // Reset messages array
+        this.messages = [];
+
+        // Restore previous messages
+        problemHistory.messages.forEach(msg => {
+          this.addMessage(msg.message, msg.type, new Date(msg.timestamp));
+        });
+      }
+      
+      this.historyLoaded = true;
+    } catch (error) {
+      console.error('Error loading chat history:', error);
+    }
+  }
+
+  // Add helper method to format timestamps
+  formatTimestamp(date) {
+    const now = new Date();
+    const isToday = date.toDateString() === now.toDateString();
+    
+    const timeStr = date.toLocaleTimeString([], { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
+    
+    if (isToday) {
+      return `Today at ${timeStr}`;
+    }
+    
+    return `${date.toLocaleDateString()} ${timeStr}`;
   }
 }
 
@@ -324,8 +393,11 @@ function openAIChat() {
     }
   });
   
-  // Welcome message
-  chat.addMessage(`**Welcome to AI Doubt Solver! 👋**
+  // Load history after setting problem context and creating UI
+  chat.loadHistory().then(() => {
+    // Only show welcome message if there's no history
+    if (chat.messages.length === 0) {
+      chat.addMessage(`**Welcome to AI Doubt Solver! 👋**
 
 I'm here to help you with this coding problem. You can:
 • Click "Get Hint" for guided assistance
@@ -333,6 +405,8 @@ I'm here to help you with this coding problem. You can:
 • Ask any specific questions about the problem
 
 How can I help you today?`, 'ai');
+    }
+  });
 }
 
 // Add styles for code blocks

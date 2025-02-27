@@ -104,17 +104,35 @@
 .chat-messages {
   flex: 1;
   overflow-y: auto;
-  padding: 16px;
+  padding: 24px 16px;
   background: #F8F9FA;
 }
 
 .chat-message {
+  position: relative;
   padding: 12px;
-  margin: 8px 0;
-  border-radius: 4px;
+  margin: 16px 0;
+  border-radius: 12px;
   max-width: 85%;
   font-size: 14px;
   line-height: 1.5;
+  animation: fadeIn 0.3s ease;
+}
+
+.message-timestamp {
+  position: absolute;
+  bottom: -18px;
+  font-size: 11px;
+  color: #666;
+  opacity: 0.8;
+}
+
+.user-message .message-timestamp {
+  right: 0;
+}
+
+.ai-message .message-timestamp {
+  left: 0;
 }
 
 .user-message {
@@ -185,4 +203,40 @@
   text-align: center;
   border-radius: 8px;
   font-family: 'DM Sans', sans-serif;
+}
+
+/* Add date separator */
+.date-separator {
+  text-align: center;
+  margin: 24px 0;
+  position: relative;
+}
+
+.date-separator::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 1px;
+  background: rgba(96, 138, 210, 0.1);
+}
+
+.date-separator span {
+  background: #F8F9FA;
+  padding: 0 16px;
+  color: #666;
+  font-size: 12px;
+  position: relative;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Hover effect for timestamps */
+.chat-message:hover .message-timestamp {
+  opacity: 1;
 }
