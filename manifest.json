@@ -4,6 +4,12 @@
   "version": "0.1",
   "author": "Harsh Bhardwaj",
   "description": "AI-powered coding assistant for problem solving",
+  "icons": {
+    "16": "assets/AlgoZenith_logo.png",
+    "32": "assets/AlgoZenith_logo.png",
+    "48": "assets/AlgoZenith_logo.png",
+    "128": "assets/AlgoZenith_logo.png"
+  },
   "permissions": [
     "storage",
     "activeTab",
