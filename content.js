@@ -5,7 +5,7 @@ function addAIButton() {
     const aiButton = askDoubtButton.cloneNode(true);
     aiButton.classList.add('ai-doubt-button');
     const buttonText = aiButton.querySelector('span');
-    buttonText.textContent = 'AI Doubt';
+    buttonText.textContent = 'AlgoZenith AI';
     
     // Update icon
     const svg = aiButton.querySelector('svg');
@@ -336,7 +336,7 @@ function openAIChat() {
   popup.className = 'ai-chat-popup';
   popup.innerHTML = `
     <div class="chat-header">
-      <h3>AI Doubt Solver</h3>
+      <h3>AlgoZenith AI</h3>
       <button class="close-button">×</button>
     </div>
     <div class="chat-options">
@@ -397,7 +397,7 @@ function openAIChat() {
   chat.loadHistory().then(() => {
     // Only show welcome message if there's no history
     if (chat.messages.length === 0) {
-      chat.addMessage(`**Welcome to AI Doubt Solver! 👋**
+      chat.addMessage(`Welcome to AlgoZenith AI! 👋
 
 I'm here to help you with this coding problem. You can:
 • Click "Get Hint" for guided assistance

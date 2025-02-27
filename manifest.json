@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "AI Doubt",
+  "name": "AlgoZenith AI",
   "version": "0.1",
   "author": "Harsh Bhardwaj",
   "description": "AI-powered coding assistant for problem solving",
@@ -37,6 +37,6 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "AI Doubt"
+    "default_title": "AlgoZenith AI"
   }
 }
