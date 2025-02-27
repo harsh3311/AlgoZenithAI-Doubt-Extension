@@ -1,10 +1,9 @@
 /* css */
 
 .ai-doubt-button {
-  margin-left: 0px !important;
-  margin-right: 0 !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
+  padding-right: 10px !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
 }
 
 .popup-overlay {

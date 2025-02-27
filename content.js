@@ -5,7 +5,7 @@ function addAIButton() {
     const aiButton = askDoubtButton.cloneNode(true);
     aiButton.classList.add('ai-doubt-button');
     const buttonText = aiButton.querySelector('span');
-    buttonText.textContent = 'AlgoZenith AI';
+    buttonText.textContent = 'AlgoZenithAI';
     
     // Update icon
     const svg = aiButton.querySelector('svg');
