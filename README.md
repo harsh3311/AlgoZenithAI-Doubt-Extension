@@ -1,4 +1,6 @@
 # AlgoZenithAI Doubt Extension
+<img width="1470" alt="Screenshot 2025-02-28 at 1 06 09 PM" src="https://github.com/user-attachments/assets/6e8f8782-6ea0-4afa-b56b-c5a60cd9930a" />
+
 
 A Chrome Extension designed to assist programmers by integrating an AI-powered coding assistant directly into coding platforms like MAANG.in. Powered by the Gemini API, this extension provides hints, solutions, and answers to programming-related questions, enhancing the problem-solving experience.
 
